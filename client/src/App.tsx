@@ -33,23 +33,23 @@ export class App extends React.PureComponent<{}, AppState> {
 			tickets: await api.getTickets()
 		});
 	}
-	handleClick =(event: MouseEvent) => { // add handle click funcstion 
+	handleClick = (event: MouseEvent) => { // add handle click funcstion 
 		event.preventDefault();
-		var joined = this.state.idsToHide.concat((event.target as Element).className);
-	this.setState({
-		idsToHide: joined
-	}); 
+		var joined = this.state.idsToHide.concat((event.target as Element).id);
+		this.setState({
+			idsToHide: joined
+		});
 	}
-	handleLink =(event: MouseEvent) => { // add handle click funcstion 
-	this.setState({
-		idsToHide: []
-	})
+	handleLink = (event: MouseEvent) => { // add handle click funcstion 
+		this.setState({
+			idsToHide: []
+		})
 	}
 	renderTickets = (tickets: Ticket[]) => {
 
 		const filteredTickets = tickets
-			.filter((t) => (t.title.toLowerCase() + t.content.toLowerCase()).includes(this.state.search.toLowerCase())&& !(this.state.idsToHide).includes(t.id));
-		
+			.filter((t) => (t.title.toLowerCase() + t.content.toLowerCase()).includes(this.state.search.toLowerCase()) && !(this.state.idsToHide).includes(t.id));
+
 		const splitLabels = tickets.map((tickets) => (<button>{tickets.labels}</button>));
 
 
@@ -58,11 +58,9 @@ export class App extends React.PureComponent<{}, AppState> {
 
 			{filteredTickets.map((ticket) =>
 				<li key={ticket.id} className='ticket'>
-					
+		
+					<button className='hButton' id={ticket.id} onClick={this.handleClick}> hide </button> {/* add a button need to edit */}
 					<TicketWindow ticket={ticket} />
-					<button className={ticket.id} id='button' onClick={this.handleClick}> {/* add a button need to edit */}
-    hide
-    </button>
 
 				</li>)}
 		</ul>);
@@ -88,8 +86,12 @@ export class App extends React.PureComponent<{}, AppState> {
 			<header>
 				<input type="search" placeholder="Search..." onChange={(e) => this.onSearch(e.target.value)} />
 			</header>
-			{tickets ? <div className='results'>Showing {tickets.length} results ( {this.state.idsToHide.length} hidden ticket{this.state.idsToHide.length>1 ?'s': null}
+			{tickets ? <div className='results'>Showing {tickets.length} results</div> : null}
+
+			{this.state.idsToHide.length > 0 ? <div className='results'>(  {this.state.idsToHide.length} hidden ticket{this.state.idsToHide.length > 1 ? 's' : null}
 			- <a onClick={this.handleLink}>restore </a>)</div> : null}
+
+
 
 			{tickets ? this.renderTickets(tickets) : <h2>Loading..</h2>}
 		</main>)

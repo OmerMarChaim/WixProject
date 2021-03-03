@@ -7,7 +7,7 @@ export type Ticket = {
     content: string;
     creationTime: number;
     userEmail: string;
-    labels?: string[];
+    labels?: string[]; 
 }
 
 export type ApiClient = {

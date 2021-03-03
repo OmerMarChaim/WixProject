@@ -93,6 +93,16 @@ body {
                     flex-shrink: 0;
                 }
             }
+            .hButton {
+                background-color: white;
+                border: white;
+                display: flex;
+                text-overflow: ellipsis;
+                transition: border .1s ease;
+            }
+            .hButton:hover {
+                background-color: red;
+            }
         }
     }
 }
