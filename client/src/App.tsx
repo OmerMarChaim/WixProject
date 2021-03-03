@@ -40,8 +40,11 @@ export class App extends React.PureComponent<{}, AppState> {
 		idsToHide: joined
 	}); 
 	}
-
-
+	handleLink =(event: MouseEvent) => { // add handle click funcstion 
+	this.setState({
+		idsToHide: []
+	})
+	}
 	renderTickets = (tickets: Ticket[]) => {
 
 		const filteredTickets = tickets
@@ -85,8 +88,8 @@ export class App extends React.PureComponent<{}, AppState> {
 			<header>
 				<input type="search" placeholder="Search..." onChange={(e) => this.onSearch(e.target.value)} />
 			</header>
-			{tickets ? <div className='results'>Showing {tickets.length} results  there is {this.state.idsToHide.length} hide{this.state.idsToHide.length>1 ?'s': null}
-			<a>restore </a></div> : null}
+			{tickets ? <div className='results'>Showing {tickets.length} results ( {this.state.idsToHide.length} hidden ticket{this.state.idsToHide.length>1 ?'s': null}
+			- <a onClick={this.handleLink}>restore </a>)</div> : null}
 
 			{tickets ? this.renderTickets(tickets) : <h2>Loading..</h2>}
 		</main>)
