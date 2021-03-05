@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { cloneElement,useState, useEffect } from 'react';
 import './App.scss';
 import { createApiClient, Ticket } from './api';
 import { setSyntheticLeadingComments } from 'typescript';
@@ -8,11 +8,11 @@ import { Component, MouseEvent } from 'react';
 import { TicketWindow } from './TicketWindow';
 import { KeyObject } from 'crypto';
 
-
 export type AppState = {
 	tickets?: Ticket[],
 	search: string,
-	idsToHide: string[];
+	idsToHide: string[],
+	cloneSuccess: boolean;
 }
 
 
@@ -22,7 +22,8 @@ export class App extends React.PureComponent<{}, AppState> {
 
 	state: AppState = {
 		search: '',
-		idsToHide: []
+		idsToHide: [],
+		cloneSuccess : false
 	}
 
 
@@ -33,37 +34,43 @@ export class App extends React.PureComponent<{}, AppState> {
 			tickets: await api.getTickets()
 		});
 	}
-	handleClick = (event: MouseEvent) => { // add handle click funcstion 
+	handleHideClick = (event: MouseEvent) => { // add handle click Hide button funcstion 
 		event.preventDefault();
 		var joined = this.state.idsToHide.concat((event.target as Element).id);
 		this.setState({
 			idsToHide: joined
 		});
 	}
-	handleLink = (event: MouseEvent) => { // add handle click funcstion 
+	handleLink = (event: MouseEvent) => { // add handle click on link Restore funcstion 
 		this.setState({
-			idsToHide: []
+			idsToHide: [] // set the list to empty = restore the hide action
+			
 		})
+	}
+
+	 handleCloneClick = (event: MouseEvent) => { // add handle click funcstion 
+		var newTicketId= (event.target as Element).id;
+		api.cloneTicket(newTicketId);
+		 this.setState({
+			// tickets :  api.cloneTicket(newTicketId)
+			}); 
 	}
 	renderTickets = (tickets: Ticket[]) => {
 
 		const filteredTickets = tickets
 			.filter((t) => (t.title.toLowerCase() + t.content.toLowerCase()).includes(this.state.search.toLowerCase()) && !(this.state.idsToHide).includes(t.id));
-
-		const splitLabels = tickets.map((tickets) => (<button>{tickets.labels}</button>));
-
-
+		
 		return (<ul className='tickets'>
-
 
 			{filteredTickets.map((ticket) =>
 				<li key={ticket.id} className='ticket'>
 		
-					<button className='hButton' id={ticket.id} onClick={this.handleClick}> hide </button> {/* add a button need to edit */}
+					<button className='hButton' id={ticket.id} onClick={this.handleHideClick}> Hide </button> {/* add a button need to edit */}
 					<TicketWindow ticket={ticket} />
-
+					 <button className='cloneButton' id ={ticket.id} onClick={this.handleCloneClick} > Clone </button> 	
 				</li>)}
-		</ul>);
+
+			</ul>); 
 	}
 
 	onSearch = async (val: string, newPage?: number) => {

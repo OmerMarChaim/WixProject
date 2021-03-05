@@ -67,6 +67,9 @@ body {
             position: relative;
             &:hover {
                 box-shadow: 0 2px 6px 1px #d3d7da;
+                .hButton {
+                    color: #7a92a5;
+                }
             }
             .title {
                 margin: 15px 0;
@@ -76,6 +79,7 @@ body {
                 color: #20455e;
             }
             .content {
+                //display: inline-block;
                 ///add a content style for the text
                 margin: 15px 0;
                 font-size: 16px;
@@ -96,12 +100,16 @@ body {
             .hButton {
                 background-color: white;
                 border: white;
-                display: flex;
-                text-overflow: ellipsis;
-                transition: border .1s ease;
+                color: white;
             }
-            .hButton:hover {
-                background-color: red;
+            .labels {
+                background-color: #b4d9f8;
+                border: 1px solid rgb(81, 186, 255);
+                padding: 6px 11px 4px 9px;
+                //box-shadow: 0 2px 6px 1px #0c65aa;
+                margin: 6px 10px 5px 12px;
+                size: reletive;
+                width: 15%;
             }
         }
     }
