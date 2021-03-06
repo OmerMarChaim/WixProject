@@ -37,6 +37,7 @@ export class App extends React.PureComponent<{}, AppState> {
 	handleHideClick = (event: MouseEvent) => { // add handle click Hide button funcstion 
 		event.preventDefault();
 		var joined = this.state.idsToHide.concat((event.target as Element).id);
+		//every id is Uniqe
 		this.setState({
 			idsToHide: joined
 		});
@@ -51,20 +52,19 @@ export class App extends React.PureComponent<{}, AppState> {
 		let crypto = require("crypto");
 		let newIdsApart = [];
 		let j = 0;
-	/* 	for ( let i in [4, 2, 2, 2, 6]) {
-			newIdsApart[j] = crypto.randomBytes(Number(i)).toString('hex');
-		
-		} */
-		newIdsApart[0]=crypto.randomBytes(4).toString('hex');
-		newIdsApart[1]=crypto.randomBytes(2).toString('hex');
-		newIdsApart[2]=crypto.randomBytes(2).toString('hex');
-		newIdsApart[3]=crypto.randomBytes(2).toString('hex');
-		newIdsApart[4]=crypto.randomBytes(6).toString('hex');
+		/* 	for ( let i in [4, 2, 2, 2, 6]) {
+				newIdsApart[j] = crypto.randomBytes(Number(i)).toString('hex');
+			
+			} */
+		newIdsApart[0] = crypto.randomBytes(4).toString('hex');
+		newIdsApart[1] = crypto.randomBytes(2).toString('hex');
+		newIdsApart[2] = crypto.randomBytes(2).toString('hex');
+		newIdsApart[3] = crypto.randomBytes(2).toString('hex');
+		newIdsApart[4] = crypto.randomBytes(6).toString('hex');
 
 		let newId = newIdsApart.join("-");
-let time=Date.now();
-		
-		return(newId);
+
+		return (newId);
 	}
 
 	handleCloneClick = async (event: MouseEvent, ticket: Ticket) => { // add handle click funcstion 
@@ -76,7 +76,7 @@ let time=Date.now();
 		let ticket_userEmail = ticket.userEmail;
 		let ticket_labels = ticket.labels;
 		this.setState({
-		tickets: await 	api.cloneTicket(ticket_id, ticket_title,ticket_content, ticket_userEmail, ticket_labels)
+			tickets: await api.cloneTicket(ticket_id, ticket_title, ticket_content, ticket_userEmail, ticket_labels)
 		});
 	}
 
@@ -85,7 +85,7 @@ let time=Date.now();
 
 		const filteredTickets = tickets
 			.filter((t) => (t.title.toLowerCase() + t.content.toLowerCase()).includes(this.state.search.toLowerCase())
-			&& !(this.state.idsToHide).includes(t.id));   //dont show hide tickets;
+				&& !(this.state.idsToHide).includes(t.id));   //dont show hide tickets;
 		return (<ul className='tickets'>
 
 			{filteredTickets.map((ticket) =>
@@ -116,8 +116,9 @@ let time=Date.now();
 		console.log(PageCounter);
 		let nextPage = api.getNewPage(PageCounter)
 		console.log(nextPage);
+		//this.state.tickets?.concat(nextPage);
 		this.setState({
-			//		tickets: await tickets.concat(nextPage) // set the list to empty = restore the hide action		
+			tickets: await nextPage // set the list to empty = restore the hide action		
 		});
 	}
 

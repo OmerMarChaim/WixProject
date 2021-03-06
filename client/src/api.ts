@@ -11,6 +11,7 @@ export type Ticket = {
     labels?: string[];
 }
 let i = 1;
+let newUrl = APIRootPath.concat('?page=' + i); // a new url to effect the page property
 export type ApiClient = {
     getTickets: () => Promise<Ticket[]>,
     getNewPage: (numberOfPage: number) => Promise<Ticket[]>,
@@ -29,7 +30,7 @@ export const createApiClient = (): ApiClient => {
         }
         , getNewPage: (numberOfPage) => {
             i++;//ask for the next page
-            let newUrl = APIRootPath.concat('?page=' + i); // a new url to effect the page property
+          
         
 
             return axios.get(newUrl,).then((res) => res.data);
