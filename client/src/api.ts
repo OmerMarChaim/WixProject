@@ -26,12 +26,12 @@ export const createApiClient = (): ApiClient => {
 
     return {
         getTickets: () => {
-            return axios.get(APIRootPath).then((res) => res.data);
+            return axios.get(newUrl).then((res) => res.data);
         }
         , getNewPage: (numberOfPage) => {
             i++;//ask for the next page
           
-        
+            newUrl = APIRootPath.concat('?page=' + i);
 
             return axios.get(newUrl,).then((res) => res.data);
         }
@@ -39,7 +39,7 @@ export const createApiClient = (): ApiClient => {
         , cloneTicket: (ticket_id,ticket_title,ticket_content,ticket_userEmail,ticket_labels) => {
             //post request with the id we want to clone
 
-            return axios.post(APIRootPath, {ticket_id,ticket_title,ticket_content,ticket_userEmail,ticket_labels })
+            return axios.post(newUrl, {ticket_id,ticket_title,ticket_content,ticket_userEmail,ticket_labels })
             .then((res) => res.data);
 
         }
