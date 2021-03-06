@@ -3,14 +3,15 @@ import bodyParser = require('body-parser');
 import { tempData } from './temp-data';
 import { serverAPIPort, APIPath } from '@fed-exam/config';
 import { Ticket } from '../client/src/api';
+import { randomInt } from 'crypto';
 
 console.log('starting server', { serverAPIPort, APIPath });
 
 const app = express();
 
-const PAGE_SIZE = 30;
+const PAGE_SIZE = 20;
 
-
+let page1 = 1;
 
 app.use(bodyParser.json());
 
@@ -29,10 +30,9 @@ app.use((_, res, next) => {
 app.get(APIPath, (req, res) => {
 
   // @ts-ignore
-  const page: number = req.query.page || 1;
+  page1 = req.query.page || 1;
 
-  paginatedData = tempData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  console.log(req.body)
+  paginatedData = tempData.slice((page1 - 1) * PAGE_SIZE, page1 * PAGE_SIZE);
 
   res.send(paginatedData);
 });
@@ -40,30 +40,29 @@ app.get(APIPath, (req, res) => {
 
 app.post(APIPath, (req, res) => { //post function for clone request
 
-  // var ticketToClone = tempData.filter((t) => (t.id).match(req.body))
-
-  // paginatedData.push(ticketToClone[0]);
-
+  //need to add the the big memory
 
   // @ts-ignore
-  const page: number = req.query.page || 1;
+  page1 = req.query.page
+
+  let ticketToClone = tempData.filter((t) => !(t.id).localeCompare(req.body.ticket_id))
+
+  ticketToClone[0].id.concat("b", "1"); // make each clone ticketId uniqe doesnt work
+  //  i++;
+  tempData.unshift(ticketToClone[0]);
+  paginatedData = tempData.slice((page1 - 1) * PAGE_SIZE, page1 * PAGE_SIZE);
 
 
-  paginatedData = tempData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
+  // paginatedData.unshift(ticketToClone[0]) ; // to dysply it in the claient side
 
+  //res.send(paginatedData); // what realy need to return
 
-  var ticketToClone = paginatedData.filter((t) => !(t.id).localeCompare(req.body.ticket_id))
-
-  paginatedData.push(ticketToClone[0]) ; // test to see if i can change betwn them
-
-  res.send(paginatedData); // what realy need to return
+  res.send(1); // test 2b
 
   //teq.body.ticket_id give me the string
- // res.send(ticketToClone);
 
 })
-
 app.listen(serverAPIPort);
 console.log('server running', serverAPIPort)
 
