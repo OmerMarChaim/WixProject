@@ -12,6 +12,7 @@ const app = express();
 const PAGE_SIZE = 20;
 
 let page = 1;
+var newCloneTicket: Ticket;
 
 app.use(bodyParser.json());
 
@@ -27,10 +28,11 @@ app.use((_, res, next) => {
 });
 
 
+
 app.get(APIPath, (req, res) => {
 
   // @ts-ignore
-page = req.query.page || 1;
+  page = req.query.page || 1;
 
   paginatedData = tempData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
@@ -40,25 +42,24 @@ page = req.query.page || 1;
 
 app.post(APIPath, (req, res) => { //post function for clone request
 
-  //need to add the the big memory
-
-  // @ts-ignore
-  page = req.query.page || 1;
-  let ticketToClone = tempData.filter((t) => !(t.id).localeCompare(req.body.ticket_id))
-
-  ticketToClone[0].id.concat("b", "1"); // make each clone ticketId uniqe doesnt work
-  //  i++;
-  tempData.unshift(ticketToClone[0]);
+  //let ticketToClone = tempData.filter((t) => !(t.id).localeCompare(req.body.ticket_id))
+  newCloneTicket= { id: req.body.ticket_id,title: req.body.ticket_title,
+                    content: req.body.ticket_content,
+                  userEmail:req.body.ticket_userEmail,creationTime:Date.now(),
+                labels:req.body.ticket_labels }
+/*   newCloneTicket.id = req.bodnelsy.ticket_id;
+  newCloneTicket.title = req.body.ticket_title;
+  newCloneTicket.content = req.body.ticket_content;
+  newCloneTicket.userEmail = req.body.ticket_userEmail;
+  //newCloneTicket.labels = req.body.ticket_labels;
+  newCloneTicket.creationTime = Date.now(); // update the timstemp
+   */
+    // @ts-ignore
+    page = req.query.page || 1;
+  tempData.unshift(newCloneTicket);
   paginatedData = tempData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-
-  // paginatedData.unshift(ticketToClone[0]) ; // to dysply it in the claient side
-
-  //res.send(paginatedData); // what realy need to return
-
-  res.send(paginatedData); // test 2b
-
-  //teq.body.ticket_id give me the string
+  res.send(paginatedData); 
 
 })
 app.listen(serverAPIPort);

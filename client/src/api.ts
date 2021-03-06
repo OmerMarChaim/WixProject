@@ -13,10 +13,13 @@ export type Ticket = {
 let i = 1;
 export type ApiClient = {
     getTickets: () => Promise<Ticket[]>,
-    getNewPage: (numberOfPage: number) =>Promise<Ticket[]>,
-    cloneTicket: (ticket_id: String) =>  Promise<Ticket[]>; //real one
-   
+    getNewPage: (numberOfPage: number) => Promise<Ticket[]>,
+    cloneTicket: (ticket_id : String ,ticket_title :String ,ticket_content :String 
+        ,ticket_userEmail :String ,ticket_labels :String[] |undefined  ) =>  Promise<Ticket[]>;         
+    //get property of ticket i want to save retuen a new tickets array with the clone ticket
+
 }
+
 
 export const createApiClient = (): ApiClient => {
 
@@ -25,16 +28,18 @@ export const createApiClient = (): ApiClient => {
             return axios.get(APIRootPath).then((res) => res.data);
         }
         , getNewPage: (numberOfPage) => {
-            let newUrl = APIRootPath.concat('?page=' + i); // a new url to effect the page property
             i++;//ask for the next page
-         
+            let newUrl = APIRootPath.concat('?page=' + i); // a new url to effect the page property
+        
+
             return axios.get(newUrl,).then((res) => res.data);
         }
 
-        , cloneTicket: (ticket_id) => {
+        , cloneTicket: (ticket_id,ticket_title,ticket_content,ticket_userEmail,ticket_labels) => {
             //post request with the id we want to clone
 
-            return axios.post(APIRootPath, { ticket_id }).then((res) => res.data);
+            return axios.post(APIRootPath, {ticket_id,ticket_title,ticket_content,ticket_userEmail,ticket_labels })
+            .then((res) => res.data);
 
         }
 

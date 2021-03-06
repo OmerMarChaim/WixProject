@@ -46,13 +46,37 @@ export class App extends React.PureComponent<{}, AppState> {
 			idsToHide: [] // set the list to empty = restore the hide action		
 		});
 	}
+	createNewCryptoId = () => {  //set new id for the clone ticket
+		//our id structure is <8>-<4>-<4>-<4>-<12>
+		let crypto = require("crypto");
+		let newIdsApart = [];
+		let j = 0;
+	/* 	for ( let i in [4, 2, 2, 2, 6]) {
+			newIdsApart[j] = crypto.randomBytes(Number(i)).toString('hex');
+		
+		} */
+		newIdsApart[0]=crypto.randomBytes(4).toString('hex');
+		newIdsApart[1]=crypto.randomBytes(2).toString('hex');
+		newIdsApart[2]=crypto.randomBytes(2).toString('hex');
+		newIdsApart[3]=crypto.randomBytes(2).toString('hex');
+		newIdsApart[4]=crypto.randomBytes(6).toString('hex');
 
-	handleCloneClick = (event: MouseEvent) => { // add handle click funcstion 
-		var newTicketId = (event.target as Element).id;
-		 var nt = api.cloneTicket(newTicketId); // the new array i need      //take it down for tedt in 2b
-		console.log(nt);    //test it work													//take it down for tedt in 2b
+		let newId = newIdsApart.join("-");
+let time=Date.now();
+		
+		return(newId);
+	}
+
+	handleCloneClick = async (event: MouseEvent, ticket: Ticket) => { // add handle click funcstion 
+
+		//var nt =  // the new array i need   
+		let ticket_id = this.createNewCryptoId();
+		let ticket_title = ticket.title;
+		let ticket_content = ticket.content;
+		let ticket_userEmail = ticket.userEmail;
+		let ticket_labels = ticket.labels;
 		this.setState({
-			//tickets: api.cloneTicket(newTicketId)
+		tickets: await 	api.cloneTicket(ticket_id, ticket_title,ticket_content, ticket_userEmail, ticket_labels)
 		});
 	}
 
@@ -61,16 +85,15 @@ export class App extends React.PureComponent<{}, AppState> {
 
 		const filteredTickets = tickets
 			.filter((t) => (t.title.toLowerCase() + t.content.toLowerCase()).includes(this.state.search.toLowerCase())
-				&& !(this.state.idsToHide).includes(t.id));   //dont show hide tickets;
-
+			&& !(this.state.idsToHide).includes(t.id));   //dont show hide tickets;
 		return (<ul className='tickets'>
 
 			{filteredTickets.map((ticket) =>
 				<li key={ticket.id} className='ticket'>
-
 					<button className='hButton' id={ticket.id} onClick={this.handleHideClick}> Hide </button> {/* add a button need to edit */}
 					<TicketWindow ticket={ticket} />
-					<button className='cloneButton' id={ticket.id} onClick={this.handleCloneClick} > Clone </button>
+					<button className='cloneButton' id={ticket.id} onClick={(e) => this.handleCloneClick(e, ticket)} > Clone </button>
+
 				</li>)}
 
 		</ul>);
@@ -88,13 +111,13 @@ export class App extends React.PureComponent<{}, AppState> {
 	}
 
 
-	handleShowMoreClick = (event: MouseEvent) => { // add handle click on link Restore funcstion 
+	handleShowMoreClick = async (event: MouseEvent) => { // add handle click on link Restore funcstion 
 		PageCounter = PageCounter + 1;
 		console.log(PageCounter);
 		let nextPage = api.getNewPage(PageCounter)
 		console.log(nextPage);
 		this.setState({
-			//	tickets.concat(nextPage) // set the list to empty = restore the hide action		
+			//		tickets: await tickets.concat(nextPage) // set the list to empty = restore the hide action		
 		});
 	}
 
