@@ -1,4 +1,4 @@
-import React, { cloneElement,useState, useEffect } from 'react';
+import React, { cloneElement, useState, useEffect } from 'react';
 import './App.scss';
 import { createApiClient, Ticket } from './api';
 import { setSyntheticLeadingComments } from 'typescript';
@@ -7,15 +7,15 @@ import { count } from 'console';
 import { Component, MouseEvent } from 'react';
 import { TicketWindow } from './TicketWindow';
 import { KeyObject } from 'crypto';
+import { SSL_OP_NO_TLSv1_1 } from 'constants';
 
 export type AppState = {
 	tickets?: Ticket[],
 	search: string,
 	idsToHide: string[],
-	cloneSuccess: boolean;
+	ticketAfterClone: Ticket[]; // add an array to store the new tickets
 }
-
-
+let PageCounter = 1;
 const api = createApiClient();
 
 export class App extends React.PureComponent<{}, AppState> {
@@ -23,7 +23,7 @@ export class App extends React.PureComponent<{}, AppState> {
 	state: AppState = {
 		search: '',
 		idsToHide: [],
-		cloneSuccess : false
+		ticketAfterClone: []
 	}
 
 
@@ -43,34 +43,37 @@ export class App extends React.PureComponent<{}, AppState> {
 	}
 	handleLink = (event: MouseEvent) => { // add handle click on link Restore funcstion 
 		this.setState({
-			idsToHide: [] // set the list to empty = restore the hide action
-			
-		})
+			idsToHide: [] // set the list to empty = restore the hide action		
+		});
 	}
 
-	 handleCloneClick = (event: MouseEvent) => { // add handle click funcstion 
-		var newTicketId= (event.target as Element).id;
-		api.cloneTicket(newTicketId);
-		 this.setState({
-			// tickets :  api.cloneTicket(newTicketId)
-			}); 
+	handleCloneClick = (event: MouseEvent) => { // add handle click funcstion 
+		var newTicketId = (event.target as Element).id;
+		 var nt = api.cloneTicket(newTicketId); // the new array i need      //take it down for tedt in 2b
+		console.log(nt);    //test it work													//take it down for tedt in 2b
+		this.setState({
+			//tickets: api.cloneTicket(newTicketId)
+		});
 	}
+
+
 	renderTickets = (tickets: Ticket[]) => {
 
 		const filteredTickets = tickets
-			.filter((t) => (t.title.toLowerCase() + t.content.toLowerCase()).includes(this.state.search.toLowerCase()) && !(this.state.idsToHide).includes(t.id));
-		
+			.filter((t) => (t.title.toLowerCase() + t.content.toLowerCase()).includes(this.state.search.toLowerCase())
+				&& !(this.state.idsToHide).includes(t.id));   //dont show hide tickets;
+
 		return (<ul className='tickets'>
 
 			{filteredTickets.map((ticket) =>
 				<li key={ticket.id} className='ticket'>
-		
+
 					<button className='hButton' id={ticket.id} onClick={this.handleHideClick}> Hide </button> {/* add a button need to edit */}
 					<TicketWindow ticket={ticket} />
-					 <button className='cloneButton' id ={ticket.id} onClick={this.handleCloneClick} > Clone </button> 	
+					<button className='cloneButton' id={ticket.id} onClick={this.handleCloneClick} > Clone </button>
 				</li>)}
 
-			</ul>); 
+		</ul>);
 	}
 
 	onSearch = async (val: string, newPage?: number) => {
@@ -83,6 +86,19 @@ export class App extends React.PureComponent<{}, AppState> {
 			});
 		}, 300);
 	}
+
+
+	handleShowMoreClick = (event: MouseEvent) => { // add handle click on link Restore funcstion 
+		PageCounter = PageCounter + 1;
+		console.log(PageCounter);
+		let nextPage = api.getNewPage(PageCounter)
+		console.log(nextPage);
+		this.setState({
+			//	tickets.concat(nextPage) // set the list to empty = restore the hide action		
+		});
+	}
+
+
 
 	render() {
 		const { tickets } = this.state;
@@ -101,6 +117,7 @@ export class App extends React.PureComponent<{}, AppState> {
 
 
 			{tickets ? this.renderTickets(tickets) : <h2>Loading..</h2>}
+			<button className='showMoreButton' onClick={this.handleShowMoreClick} > show more </button>
 		</main>)
 	}
 }

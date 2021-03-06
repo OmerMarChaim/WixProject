@@ -10,11 +10,12 @@ export type Ticket = {
     userEmail: string;
     labels?: string[];
 }
-
+let i = 1;
 export type ApiClient = {
     getTickets: () => Promise<Ticket[]>,
-    cloneTicket: (ticket_id: String) => void
-   // Promise<Ticket[]>;
+    getNewPage: (numberOfPage: number) =>Promise<Ticket[]>,
+    cloneTicket: (ticket_id: String) =>  Promise<Ticket[]>; //real one
+   
 }
 
 export const createApiClient = (): ApiClient => {
@@ -23,12 +24,18 @@ export const createApiClient = (): ApiClient => {
         getTickets: () => {
             return axios.get(APIRootPath).then((res) => res.data);
         }
+        , getNewPage: (numberOfPage) => {
+            let newUrl = APIRootPath.concat('?page=' + i); // a new url to effect the page property
+            i++;//ask for the next page
+         
+            return axios.get(newUrl,).then((res) => res.data);
+        }
 
         , cloneTicket: (ticket_id) => {
-console.log(ticket_id)
-             axios.post(APIRootPath, ticket_id).then((res) =>
-                console.log(res.data),(error)=> console.log(error));
-            
+            //post request with the id we want to clone
+
+            return axios.post(APIRootPath, { ticket_id }).then((res) => res.data);
+
         }
 
     }

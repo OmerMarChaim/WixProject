@@ -16,5 +16,8 @@
     "license": "ISC",
     "devDependencies": {
         "lerna": "^3.13.1"
+    },
+    "dependencies": {
+        "body-parser": "^1.19.0"
     }
 }

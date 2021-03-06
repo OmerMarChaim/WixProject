@@ -11,7 +11,7 @@ const app = express();
 
 const PAGE_SIZE = 20;
 
-let page1 = 1;
+let page = 1;
 
 app.use(bodyParser.json());
 
@@ -30,9 +30,9 @@ app.use((_, res, next) => {
 app.get(APIPath, (req, res) => {
 
   // @ts-ignore
-  page1 = req.query.page || 1;
+page = req.query.page || 1;
 
-  paginatedData = tempData.slice((page1 - 1) * PAGE_SIZE, page1 * PAGE_SIZE);
+  paginatedData = tempData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   res.send(paginatedData);
 });
@@ -43,22 +43,20 @@ app.post(APIPath, (req, res) => { //post function for clone request
   //need to add the the big memory
 
   // @ts-ignore
-  page1 = req.query.page
-
+  page = req.query.page || 1;
   let ticketToClone = tempData.filter((t) => !(t.id).localeCompare(req.body.ticket_id))
 
   ticketToClone[0].id.concat("b", "1"); // make each clone ticketId uniqe doesnt work
   //  i++;
   tempData.unshift(ticketToClone[0]);
-  paginatedData = tempData.slice((page1 - 1) * PAGE_SIZE, page1 * PAGE_SIZE);
-
+  paginatedData = tempData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
 
   // paginatedData.unshift(ticketToClone[0]) ; // to dysply it in the claient side
 
   //res.send(paginatedData); // what realy need to return
 
-  res.send(1); // test 2b
+  res.send(paginatedData); // test 2b
 
   //teq.body.ticket_id give me the string
 
