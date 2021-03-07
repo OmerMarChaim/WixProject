@@ -64,7 +64,6 @@ export class App extends React.PureComponent<{}, AppState> {
 		newIdsApart[2] = crypto.randomBytes(2).toString('hex');
 		newIdsApart[3] = crypto.randomBytes(2).toString('hex');
 		newIdsApart[4] = crypto.randomBytes(6).toString('hex');
-
 		let newId = newIdsApart.join("-");
 
 		return (newId);
@@ -78,9 +77,17 @@ export class App extends React.PureComponent<{}, AppState> {
 		let ticket_content = ticket.content;
 		let ticket_userEmail = ticket.userEmail;
 		let ticket_labels = ticket.labels;
-		this.setState({
-			tickets: await api.cloneTicket(ticket_id, ticket_title, ticket_content, ticket_userEmail, ticket_labels)
-		});
+		let newTicketWithClone = await api.cloneTicket(ticket_id, ticket_title, ticket_content, ticket_userEmail, ticket_labels);
+		//cheack if cloned fanc succeeded 
+		if (newTicketWithClone === this.state.tickets) {
+			alert("There is a problem with clone ")
+		}
+		else {
+			alert("The ticket you have chosen has been Cloned 🥳 ")
+			this.setState({
+				tickets: newTicketWithClone
+			});
+		}
 	}
 
 
@@ -157,6 +164,7 @@ export class App extends React.PureComponent<{}, AppState> {
 				<header>
 					<input type="search" placeholder="Search..." onChange={(e) => this.onSearch(e.target.value)} />
 				</header>
+				<button className='showMoreButton' onClick={this.handleShowMoreClick} > Show More </button>
 
 				{tickets ? <div className='results'>Showing {tickets.length} results </div> : null}
 				{this.state.idsToHide.length > 0 ? <div className='results' id='hideResult'>({this.state.idsToHide.length} hidden ticket{this.state.idsToHide.length > 1 ? 's' : null} -
