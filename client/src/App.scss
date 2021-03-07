@@ -7,6 +7,17 @@ body {
         max-width: 1000px;
         margin: 0 auto;
     }
+    .nevBar {
+        position: fixed;
+        //     display: flex;
+        background-color: white;
+        z-index: 9;
+        top: 0px;
+        left: 0;
+        width: 100%;
+        padding: 0 0 0 1.5cm;
+        height: auto;
+    }
     h1 {
         font-weight: 300;
     }
@@ -14,9 +25,13 @@ body {
         color: #7a92a5;
         font-size: 12px;
         margin: 12px 5px;
+        display: inline-block;
+    }
+    #hideResult {
+        font-style: oblique;
     }
     header {
-        width: 100%;
+        width: 50%;
         flex-shrink: 0;
         border-radius: 6px;
         background-color: #fff;
@@ -49,8 +64,23 @@ body {
         font-weight: 500;
         font-size: 12px;
     }
+    Button {
+        color: #fff;
+        text-transform: uppercase;
+        text-decoration: none;
+        background: #60a3bc;
+        padding: 20px;
+        border-radius: 50px;
+        display: inline-block;
+        border: none;
+        transition: all 0.4s ease 0s;
+        margin: 10;
+    }
+    .showMoreButton {
+        margin: 10px 0 0 25%;
+    }
     .tickets {
-        margin: 0;
+        margin: 20%;
         padding: 0;
         .ticket {
             width: 100%;
@@ -64,18 +94,23 @@ body {
             border: 1px solid #fff;
             padding: 10px 20px;
             transition: box-shadow .2s ease-in-out;
+            overflow: auto; //for overflow text
             position: relative;
             &:hover {
                 box-shadow: 0 2px 6px 1px #d3d7da;
                 .hButton {
+                    width: 10%;
                     color: #7a92a5;
+                    //   background-color: #20455e;
+                    text-align: right;
                 }
             }
             .title {
+                font-weight: bold;
                 margin: 15px 0;
                 font-size: 16px;
-                font-weight: 400;
-                font-style: normal;
+                //  font-weight: 400;
+                font-style: bold;
                 color: #20455e;
             }
             .content {
@@ -98,18 +133,20 @@ body {
                 }
             }
             .hButton {
+                float: right;
                 background-color: white;
                 border: white;
-                color: white;
             }
             .labels {
                 background-color: #b4d9f8;
                 border: 1px solid rgb(81, 186, 255);
                 padding: 6px 11px 4px 9px;
                 //box-shadow: 0 2px 6px 1px #0c65aa;
-                margin: 6px 10px 5px 12px;
+                margin: 10px 10px 15px 12px;
                 size: reletive;
-                width: auto
+                width: auto;
+                border-radius: 8px;
+                float: right;
             }
         }
     }

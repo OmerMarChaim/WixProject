@@ -8,6 +8,7 @@ import { Component, MouseEvent } from 'react';
 import { TicketWindow } from './TicketWindow';
 import { KeyObject } from 'crypto';
 import { SSL_OP_NO_TLSv1_1 } from 'constants';
+import { throws } from 'assert';
 
 export type AppState = {
 	tickets?: Ticket[],
@@ -17,6 +18,8 @@ export type AppState = {
 }
 let PageCounter = 1;
 const api = createApiClient();
+let filteredTickets: Ticket[];
+filteredTickets = [];
 
 export class App extends React.PureComponent<{}, AppState> {
 
@@ -36,10 +39,10 @@ export class App extends React.PureComponent<{}, AppState> {
 	}
 	handleHideClick = (event: MouseEvent) => { // add handle click Hide button funcstion 
 		event.preventDefault();
-		var joined = this.state.idsToHide.concat((event.target as Element).id);
+
 		//every id is Uniqe
 		this.setState({
-			idsToHide: joined
+			idsToHide: this.state.idsToHide.concat((event.target as Element).id)
 		});
 	}
 	handleLink = (event: MouseEvent) => { // add handle click on link Restore funcstion 
@@ -83,7 +86,7 @@ export class App extends React.PureComponent<{}, AppState> {
 
 	renderTickets = (tickets: Ticket[]) => {
 
-		const filteredTickets = tickets
+		filteredTickets = tickets
 			.filter((t) => (t.title.toLowerCase() + t.content.toLowerCase()).includes(this.state.search.toLowerCase())
 				&& !(this.state.idsToHide).includes(t.id));   //dont show hide tickets;
 		return (<ul className='tickets'>
@@ -113,35 +116,63 @@ export class App extends React.PureComponent<{}, AppState> {
 
 	handleShowMoreClick = async (event: MouseEvent) => { // add handle click on link Restore funcstion 
 		PageCounter = PageCounter + 1;
-		console.log(PageCounter);
-		let nextPage = api.getNewPage(PageCounter)
-		console.log(nextPage);
-		//this.state.tickets?.concat(nextPage);
-		this.setState({
-			tickets: await nextPage // set the list to empty = restore the hide action		
-		});
+		let moreTickets = await api.getNewPage(PageCounter);
+		//check if there if the client ask for overFlow
+		if (moreTickets.length != (this.state.tickets ? this.state.tickets.length : 0)) {
+			this.setState({
+				tickets: moreTickets // set the list to empty = restore the hide action	
+			});
+		}
+		else {
+			PageCounter = PageCounter - 1;
+			alert('Unable to show more tickets  💁🏻‍♂️ ')
+
+		}
+	}
+
+
+	handleShowLessClick = async (event: MouseEvent) => { // add handle click on link Restore funcstion 
+		//check we dont ask for page less them zero
+		if (PageCounter - 1 > 0) {
+			PageCounter = PageCounter - 1;
+
+			this.setState({
+				tickets: await api.getNewPage(PageCounter) // set the list to empty = restore the hide action		
+			});
+		}
+		else {
+			alert('Unable to show less tickets  💁🏻‍♂️ ')
+		}
 	}
 
 
 
 	render() {
-		const { tickets } = this.state;
-
+		let { tickets } = this.state;
+		tickets = this.state.tickets;
 		return (<main>
-			<h1>Tickets List</h1>
+			<div className='nevBar' >
+				<h1>Tickets List</h1>
 
-			<header>
-				<input type="search" placeholder="Search..." onChange={(e) => this.onSearch(e.target.value)} />
-			</header>
-			{tickets ? <div className='results'>Showing {tickets.length} results</div> : null}
+				<header>
+					<input type="search" placeholder="Search..." onChange={(e) => this.onSearch(e.target.value)} />
+				</header>
 
-			{this.state.idsToHide.length > 0 ? <div className='results'>(  {this.state.idsToHide.length} hidden ticket{this.state.idsToHide.length > 1 ? 's' : null}
-			- <a onClick={this.handleLink}>restore </a>)</div> : null}
+				{tickets ? <div className='results'>Showing {tickets.length} results </div> : null}
+				{this.state.idsToHide.length > 0 ? <div className='results' id='hideResult'>({this.state.idsToHide.length} hidden ticket{this.state.idsToHide.length > 1 ? 's' : null} -
+			<a onClick={this.handleLink}> restore</a>)</div> : null}
+				<div>
 
-
-
+				</div>
+			</div>
 			{tickets ? this.renderTickets(tickets) : <h2>Loading..</h2>}
-			<button className='showMoreButton' onClick={this.handleShowMoreClick} > show more </button>
+
+
+
+			<footer className='bottemOfThePage' id="bottemOfThePage ">
+				<button className='showMoreButton' onClick={this.handleShowMoreClick} > Show More </button>
+				<button className='showMoreButton' onClick={this.handleShowLessClick} > Show Less </button>
+			</footer>
 		</main>)
 	}
 }
