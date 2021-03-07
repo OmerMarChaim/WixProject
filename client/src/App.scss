@@ -9,7 +9,6 @@ body {
     }
     .nevBar {
         position: fixed;
-        //     display: flex;
         background-color: white;
         z-index: 9;
         top: 0px;
@@ -67,7 +66,7 @@ body {
     Button {
         color: #fff;
         text-decoration: none;
-        background: #60a3bc;
+        background: #59ABE3;
         padding: 20px;
         border-radius: 50px;
         display: inline-block;
@@ -130,9 +129,7 @@ body {
                 }
             }
             .hButton {
-                //  text-align: right;
                 padding: 10px;
-                // margin: 2;
                 font-size: 10px;
                 float: inline-end;
                 background-color: white;
@@ -150,5 +147,43 @@ body {
                 float: right;
             }
         }
+    }
+    .foot {
+        margin: 10px;
+        padding: 5px;
+    }
+    h2 {
+        margin: 50px;
+        padding-bottom: 10px;
+        color: #78788c;
+        text-align: center;
+    }
+    input {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+        background: none;
+        outline: none;
+        resize: none;
+        border: 0;
+        font-family: 'Montserrat', sans-serif;
+        transition: all .3s;
+        border-bottom: 2px solid #bebed2
+    }
+    input:focus {
+        border-bottom: 2px solid #78788c
+    }
+    p:before {
+        display: block;
+        margin: 28px 0 0;
+        font-size: 14px;
+        color: #5a5a5a
+    }
+    span {
+        margin: 0 5px 0 15px
+    }
+    .sybmitButton {
+        width: 100%;
+        float: right;
     }
 }

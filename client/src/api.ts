@@ -15,7 +15,7 @@ let newUrl = APIRootPath.concat('?page=' + numberOfPage); // a new url to effect
 export type ApiClient = {
     getTickets: () => Promise<Ticket[]>,
     getNewPage: (numberOfPage: number) => Promise<Ticket[]>,
-    cloneTicket: (ticket_id : String ,ticket_title :String ,ticket_content :String 
+    newTicket: (ticket_id : String ,ticket_title :String ,ticket_content :String 
         ,ticket_userEmail :String ,ticket_labels :String[] |undefined  ) =>  Promise<Ticket[]>;         
     //get property of ticket i want to save retuen a new tickets array with the clone ticket
 
@@ -35,7 +35,7 @@ export const createApiClient = (): ApiClient => {
             return axios.get(newUrl,).then((res) => res.data);
         }
 
-        , cloneTicket: (ticket_id,ticket_title,ticket_content,ticket_userEmail,ticket_labels) => {
+        , newTicket: (ticket_id,ticket_title,ticket_content,ticket_userEmail,ticket_labels) => {
             //post request with the id we want to clone
 
             return axios.post(newUrl, {ticket_id,ticket_title,ticket_content,ticket_userEmail,ticket_labels })
