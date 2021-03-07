@@ -34,7 +34,7 @@ function setPage(pageNum: number) {
     return tempDataIndexVersion.slice(0, pageNum * PAGE_SIZE);
   }
   //if i am here , its mean i came to the max pages i can show, so i show the maximum
-  return tempDataIndexVersion.slice(0,tempDataIndexVersion.length);
+  return tempDataIndexVersion.slice(0, tempDataIndexVersion.length);
 }
 
 app.get(APIPath, (req, res) => {

@@ -152,8 +152,6 @@ export class App extends React.PureComponent<{}, AppState> {
 		}
 	}
 
-
-
 	render() {
 		let { tickets } = this.state;
 		tickets = this.state.tickets;
@@ -164,7 +162,6 @@ export class App extends React.PureComponent<{}, AppState> {
 				<header>
 					<input type="search" placeholder="Search..." onChange={(e) => this.onSearch(e.target.value)} />
 				</header>
-				<button className='showMoreButton' onClick={this.handleShowMoreClick} > Show More </button>
 
 				{tickets ? <div className='results'>Showing {tickets.length} results </div> : null}
 				{this.state.idsToHide.length > 0 ? <div className='results' id='hideResult'>({this.state.idsToHide.length} hidden ticket{this.state.idsToHide.length > 1 ? 's' : null} -
@@ -174,13 +171,10 @@ export class App extends React.PureComponent<{}, AppState> {
 				</div>
 			</div>
 			{tickets ? this.renderTickets(tickets) : <h2>Loading..</h2>}
-
-
-
-			<footer className='bottemOfThePage' id="bottemOfThePage ">
-				<button className='showMoreButton' onClick={this.handleShowMoreClick} > Show More </button>
+<div className='showButtens'>
+			<button className='showMoreButton' onClick={this.handleShowMoreClick} > Show More </button>
 				<button className='showMoreButton' onClick={this.handleShowLessClick} > Show Less </button>
-			</footer>
+				</div>		
 		</main>)
 	}
 }
